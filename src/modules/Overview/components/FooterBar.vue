@@ -1,28 +1,64 @@
 <template>
     <footer className="w-full h-16 bg-[#1E1F25] flex items-center justify-center absolute left-0 bottom-0">
         <div>
-            <vue-awesome-paginate :total-items="50" :items-per-page="5" :max-pages-shown="5" v-model="currentPage"
-                :on-click="selectPage" />
+            <vue-awesome-paginate :total-items="overviewStore.count" :items-per-page="5"
+                :max-pages-shown="roundUp(overviewStore.count)" v-model="page" @click="clearPage()" />
         </div>
     </footer>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { ref } from 'vue'
+import { defineComponent, watch } from 'vue';
+//import { ref } from 'vue'
+import axios from "axios";
+import { useOverviewStore } from '../stores/overviewStore'
+import { storeToRefs } from 'pinia'
 
 export default defineComponent({
     name: "FooterBar",
     setup() {
-        const currentPage = ref(1)
+        const overviewStore = useOverviewStore()
+        const { page } = storeToRefs(overviewStore)
 
-        return { currentPage }
+        watch(page, async () => {
+        await axios
+            .get("http://localhost:3000/house?page=" + overviewStore.page)
+            .then((response) => {
+                 //console.log(response.data[0].name)
+                for (let index = 0; index < response.data.length; index++) {
+                    const element = response.data[index].name;
+                     overviewStore.birdHouses.push(element);
+                }
+            });
+        })
+
+        return { page, overviewStore }
+    },
+    data() {
+        return {
+            count: 1
+        }
+    },
+    async mounted() {
+        await axios.get("http://localhost:3000/house/count").then((response) => {
+            this.overviewStore.count = response.data
+        })
     },
     components: {},
     methods: {
-        selectPage(page: number) {
-            console.log(page)
-        }
+        // selectPage(page: number) { //para el :on-click=""
+        //     console.log(page)
+        // },
+        roundUp(count: number): number {
+            const dividedNumber = count / 5.0;
+            const roundedNumber = Math.ceil(dividedNumber);
+            return roundedNumber;
+        },
+
+        clearPage() {
+            this.overviewStore.birdHouses = [""]
+            console.log('cleared array')
+        },
     }
 })
 </script>
@@ -39,7 +75,7 @@ export default defineComponent({
     border-radius: 8px;
     cursor: pointer;
     background-color: #1E1F25;
-   /**  border: 1px solid rgb(217, 217, 217);*/
+    /**  border: 1px solid rgb(217, 217, 217);*/
     color: #ffffff66;
 }
 
@@ -57,4 +93,3 @@ export default defineComponent({
     background-color: #5e5efc;
 }
 </style>
-
