@@ -12,7 +12,8 @@ import { defineComponent, watch } from 'vue';
 //import { ref } from 'vue'
 import axios from "axios";
 import { useOverviewStore } from '../stores/overviewStore'
-import { storeToRefs } from 'pinia'
+import { storeToRefs } from 'pinia';
+import  {API}  from '../../../exports/api';
 
 export default defineComponent({
     name: "FooterBar",
@@ -22,11 +23,11 @@ export default defineComponent({
 
         watch(page, async () => {
         await axios
-            .get("http://localhost:3000/house?page=" + overviewStore.page)
+            .get(API + "?page=" + overviewStore.page)
             .then((response) => {
                  //console.log(response.data[0].name)
                 for (let index = 0; index < response.data.length; index++) {
-                    const element = response.data[index].name;
+                    const element = response.data[index];
                      overviewStore.birdHouses.push(element);
                 }
             });
@@ -40,7 +41,7 @@ export default defineComponent({
         }
     },
     async mounted() {
-        await axios.get("http://localhost:3000/house/count").then((response) => {
+        await axios.get(API + "count").then((response) => {
             this.overviewStore.count = response.data
         })
     },
@@ -56,7 +57,7 @@ export default defineComponent({
         },
 
         clearPage() {
-            this.overviewStore.birdHouses = [""]
+            this.overviewStore.birdHouses = []
             console.log('cleared array')
         },
     }

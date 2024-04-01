@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { birdHouse } from "../utils/birdhouse.interface";
 //import axios from "axios";
 
 export const useOverviewStore = defineStore({
@@ -6,7 +7,7 @@ export const useOverviewStore = defineStore({
   state: () => ({
     page: 1,
     count: 1,
-    birdHouses: [],
+    birdHouses: [] as birdHouse[],
   }),
   getters: {},
   actions: {
