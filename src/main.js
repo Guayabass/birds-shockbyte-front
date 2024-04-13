@@ -9,10 +9,12 @@ import VueAwesomePaginate from "vue-awesome-paginate";
 import { createPinia } from 'pinia'
 import "vue-awesome-paginate/dist/style.css";
 import router from "./router";
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 
 const app = createApp(App);
 const pinia = createPinia()
+pinia.use(piniaPluginPersistedstate)
 
 library.add(faSearch);
 app.component("font-awesome-icon", FontAwesomeIcon);

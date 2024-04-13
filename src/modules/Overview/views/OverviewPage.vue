@@ -1,9 +1,9 @@
 <template>
     <NavBar></NavBar>
     <ul className="text-white flex flex-row items-start gap-3 p-6 absolute left-16">
-        <li className="w-64 h-40 bg-[#1E1F25] rounded-2xl mx-4 my-4" v-for="(bh, index) in overviewStore.birdHouses"
+        <li @click="changePage(bh.ubid, bh.name, bh.latitude, bh.longitude)" className="w-64 h-40 bg-[#1E1F25] rounded-2xl mx-4 my-4" v-for="(bh, index) in overviewStore.birdHouses"
             :key="index">
-            <div className="flex flex-col">
+            <div className="flex cursor-pointer flex-col">
                 <p className="font-bold text-lg text-center py-4">{{ bh.name }}</p>
                 <p className="flex flex-row m-3 items-center">
                     <MapPinIcon class="h-4 w-4 mx-1" /> ({{ bh.latitude }}, {{ bh.longitude }})
@@ -39,12 +39,14 @@ import axios from "axios";
 import { useOverviewStore } from '../stores/overviewStore'
 import { API } from '../../../exports/api';
 import { MapPinIcon } from '@heroicons/vue/24/solid'
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
     setup() {
         const overviewStore = useOverviewStore()
+        const router = useRouter()
 
-        return { overviewStore }
+        return { overviewStore, router }
     },
     async mounted() {
         await axios
@@ -58,7 +60,15 @@ export default defineComponent({
             });
     },
     components: { NavBar, FooterBar, SideBar, MapPinIcon },
-    methods: {},
+    methods: {
+        changePage(ubid: string, name: string, latitude: number, longitude: number){
+            this.overviewStore.ubid = ubid
+            this.overviewStore.name = name
+            this.overviewStore.latitude = latitude
+            this.overviewStore.longitude = longitude
+            this.router.push({ name: 'Birdhouse' })
+        }
+    },
     name: "OverviewPage"
 })
 </script>
