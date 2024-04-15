@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { birdHouse } from "../utils/birdhouse.interface";
+import { History } from "../../Birdhouse/utils/history.interface";
 //import axios from "axios";
 
 export const useOverviewStore = defineStore({
@@ -11,6 +12,7 @@ export const useOverviewStore = defineStore({
     latitude: 0 as number,
     name: '' as string,
     ubid: '' as string, //PERSIST
+    history: [] as History[],
     birdHouses: [] as birdHouse[],
   }),
   getters: {},

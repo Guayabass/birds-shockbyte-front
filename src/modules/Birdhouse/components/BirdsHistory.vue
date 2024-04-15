@@ -1,14 +1,10 @@
 <template>
-    <NavBar></NavBar>
-    <ul className="text-white flex flex-row items-start gap-3 p-6 absolute left-16">
-        <li @click="changePage(bh.ubid, bh.name, bh.latitude, bh.longitude)" className="w-64 h-40 bg-[#1E1F25] rounded-2xl mx-4 my-4" v-for="(bh, index) in overviewStore.birdHouses"
-            :key="index">
-            <div className="flex cursor-pointer flex-col">
-                <p className="font-bold text-lg text-center py-4">{{ bh.name }}</p>
-                <p className="flex flex-row m-3 items-center">
-                    <MapPinIcon class="h-4 w-4 mx-1" /> ({{ bh.latitude }}, {{ bh.longitude }})
-                </p>
-                <p className="flex flex-row m-3 items-center">
+    <ul>
+        <li className="w-full h-[72px] bg-[#1E1F25] m-4 rounded-lg text-white font-normal text-base"
+            v-for="(history, index) in overviewStore.history" :key="index">
+            <div className="h-full flex items-center">
+                <p className="ml-4 mr-8">{{ history.modifiedAt }}</p>
+                <div className="mr-[2px] flex flex-row items-center">
                     <svg class="mr-1" width="32px" height="32px" viewBox="0 0 400 400" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -19,8 +15,9 @@
                                 stroke="#FFFFFF" stroke-opacity="0.9" stroke-width="16" stroke-linecap="round"
                                 stroke-linejoin="round"></path>
                         </g>
-                    </svg>
-                    {{ bh.birds }}
+                    </svg>{{ history.updatedBirds }}
+                </div>
+                <div className="mx-[2px] flex flex-row items-center">
                     <svg class="mx-2" fill="#ffffff" width="16px" height="16px" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -30,55 +27,40 @@
                                 d="M12,23c6.8,0,9-6.737,9-10a13.629,13.629,0,0,0-4.293-9.707A7.193,7.193,0,0,0,12,1,7.193,7.193,0,0,0,7.293,3.293,13.629,13.629,0,0,0,3,13C3,16.263,5.2,23,12,23ZM11.989,3C14.444,3.036,19,7.393,19,13c0,2.61-1.711,8-7,8s-7-5.39-7-8C5,7.381,9.559,3.053,11.989,3ZM7.812,16.488a1,1,0,1,1,1.745-.976A2.663,2.663,0,0,0,12,17a1,1,0,0,1,0,2A4.654,4.654,0,0,1,7.812,16.488Z">
                             </path>
                         </g>
-                    </svg>
-                    {{ bh.eggs }}
-                </p>
+                    </svg>{{ history.updatedEggs }}
+                </div>
             </div>
         </li>
     </ul>
-    <SideBar></SideBar>
-    <FooterBar></FooterBar>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import NavBar from '../components/NavBar.vue';
-import FooterBar from '../components/FooterBar.vue';
-import SideBar from '../components/SideBar.vue'
+import { defineComponent } from "vue";
+import { useOverviewStore } from '../../Overview/stores/overviewStore';
 import axios from "axios";
-import { useOverviewStore } from '../stores/overviewStore'
-import { API } from '../../../exports/api';
-import { MapPinIcon } from '@heroicons/vue/24/solid'
-import { useRouter } from 'vue-router';
+import { APIHistory } from '../../../exports/api';
 
 export default defineComponent({
+    name: "BirdsHistory",
     setup() {
         const overviewStore = useOverviewStore()
-        const router = useRouter()
 
-        return { overviewStore, router }
+        return { overviewStore }
     },
     async mounted() {
-        await axios
-            .get(API + "?page=" + this.overviewStore.page)
-            .then((response) => {
-                //console.log(response.data[0].name)
-                for (let index = 0; index < response.data.length; index++) {
-                    const element = response.data[index];
-                    this.overviewStore.birdHouses.push(element);
-                }
-            });
-    },
-    components: { NavBar, FooterBar, SideBar, MapPinIcon },
-    methods: {
-        changePage(ubid: string, name: string, latitude: number, longitude: number){
-            this.overviewStore.ubid = ubid
-            this.overviewStore.name = name
-            this.overviewStore.latitude = latitude
-            this.overviewStore.longitude = longitude
-            this.router.push({ name: 'Birdhouse' })
+        axios.get(APIHistory + 'history?page=1', {
+            headers: {
+                'X-UBID': this.overviewStore.ubid
+            }
         }
+        ).then((response) => {
+            for (let index = 0; index < response.data.length; index++) {
+                const element = response.data[index];
+                this.overviewStore.history.push(element);
+            }
+        })
     },
-    name: "OverviewPage"
 })
 </script>
+
+<style></style>
