@@ -1,8 +1,9 @@
 <template>
     <footer className="w-full h-16 bg-[#1E1F25] flex items-center justify-center absolute left-0 bottom-0">
         <div>
-            <vue-awesome-paginate :total-items="overviewStore.count" :items-per-page="5"
-                :max-pages-shown="roundUp(overviewStore.count)" v-model="page" @click="clearPage()" />
+            <vue-awesome-paginate :class="{ 'noClick': overviewStore.clicked }" :total-items="overviewStore.historyCount"
+                :items-per-page="5" :max-pages-shown="roundUp(overviewStore.historyCount)" v-model="historyPage"
+                @click="clearPage()" />
         </div>
     </footer>
 </template>
@@ -13,27 +14,35 @@ import { defineComponent, watch } from 'vue';
 import axios from "axios";
 import { useOverviewStore } from '../../Overview/stores/overviewStore'
 import { storeToRefs } from 'pinia';
-import  {API}  from '../../../exports/api';
+import { APIHistory } from '../../../exports/api';
 
 export default defineComponent({
     name: "FooterBar",
     setup() {
         const overviewStore = useOverviewStore()
-        const { page } = storeToRefs(overviewStore)
+        const { historyPage } = storeToRefs(overviewStore)
 
-        watch(page, async () => {
-        await axios
-            .get(API + "?page=" + overviewStore.page)
-            .then((response) => {
-                 //console.log(response.data[0].name)
-                for (let index = 0; index < response.data.length; index++) {
-                    const element = response.data[index];
-                     overviewStore.birdHouses.push(element);
-                }
-            });
+        //
+        // max = 
+
+
+        watch(historyPage, async () => {
+            await axios
+                .get(APIHistory + "history?page=" + overviewStore.historyPage, {
+                    headers: {
+                        'X-UBID': overviewStore.ubid
+                    }
+                })
+                .then((response) => {
+                    //console.log(response.data[0].name)
+                    for (let index = 0; index < response.data.length; index++) {
+                        const element = response.data[index];
+                        overviewStore.history.push(element);
+                    }
+                });
         })
 
-        return { page, overviewStore }
+        return { historyPage, overviewStore }
     },
     data() {
         return {
@@ -41,8 +50,8 @@ export default defineComponent({
         }
     },
     async mounted() {
-        await axios.get(API + "count").then((response) => {
-            this.overviewStore.count = response.data
+        await axios.get(APIHistory + "history/count/" + this.overviewStore.ubid).then((response) => {
+            this.overviewStore.historyCount = response.data
         })
     },
     components: {},
@@ -57,7 +66,7 @@ export default defineComponent({
         },
 
         clearPage() {
-            this.overviewStore.birdHouses = []
+            this.overviewStore.history = []
             console.log('cleared array')
         },
     }
@@ -92,5 +101,9 @@ export default defineComponent({
 
 .active-page:hover {
     background-color: #5e5efc;
+}
+
+.noClick {
+    pointer-events: none;
 }
 </style>

@@ -13,7 +13,7 @@ import { defineComponent, watch } from 'vue';
 import axios from "axios";
 import { useOverviewStore } from '../stores/overviewStore'
 import { storeToRefs } from 'pinia';
-import  {API}  from '../../../exports/api';
+import { API } from '../../../exports/api';
 
 export default defineComponent({
     name: "FooterBar",
@@ -22,15 +22,15 @@ export default defineComponent({
         const { page } = storeToRefs(overviewStore)
 
         watch(page, async () => {
-        await axios
-            .get(API + "?page=" + overviewStore.page)
-            .then((response) => {
-                 //console.log(response.data[0].name)
-                for (let index = 0; index < response.data.length; index++) {
-                    const element = response.data[index];
-                     overviewStore.birdHouses.push(element);
-                }
-            });
+            await axios
+                .get(API + "?page=" + overviewStore.page)
+                .then((response) => {
+                    //console.log(response.data[0].name)
+                    for (let index = 0; index < response.data.length; index++) {
+                        const element = response.data[index];
+                        overviewStore.birdHouses.push(element);
+                    }
+                });
         })
 
         return { page, overviewStore }

@@ -7,4 +7,3 @@
     <router-view></router-view>
   </main>
 </template>
-

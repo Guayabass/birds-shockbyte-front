@@ -18,6 +18,7 @@ pinia.use(piniaPluginPersistedstate)
 
 library.add(faSearch);
 app.component("font-awesome-icon", FontAwesomeIcon);
+// eslint-disable-next-line vue/multi-word-component-names
 app.use(router);
 app.use(pinia);
 app.use(VueAwesomePaginate);

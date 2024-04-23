@@ -19,11 +19,9 @@ const mainRoutes = [
   },
 ];
 
-
-
 const router = createRouter({
   history: createWebHistory(),
-  routes: [...mainRoutes, ...overviewRoutes, ...birdhouseRoutes]
+  routes: [...mainRoutes, ...overviewRoutes, ...birdhouseRoutes],
 });
 
 export default router;

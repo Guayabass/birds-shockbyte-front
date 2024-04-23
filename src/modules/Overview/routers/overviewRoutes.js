@@ -1,4 +1,4 @@
-import OverviewPage from '../views/OverviewPage.vue';
+import OverviewPage from "../views/OverviewPage.vue";
 
 export default [
   {

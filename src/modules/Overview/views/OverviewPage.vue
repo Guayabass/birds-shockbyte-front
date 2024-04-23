@@ -1,7 +1,8 @@
 <template>
     <NavBar></NavBar>
     <ul className="text-white flex flex-row items-start gap-3 p-6 absolute left-16">
-        <li @click="changePage(bh.ubid, bh.name, bh.latitude, bh.longitude)" className="w-64 h-40 bg-[#1E1F25] rounded-2xl mx-4 my-4" v-for="(bh, index) in overviewStore.birdHouses"
+        <li @click="changePage(bh.ubid, bh.name, bh.latitude, bh.longitude)"
+            className="w-64 h-40 bg-[#1E1F25] rounded-2xl mx-4 my-4" v-for="(bh, index) in overviewStore.birdHouses"
             :key="index">
             <div className="flex cursor-pointer flex-col">
                 <p className="font-bold text-lg text-center py-4">{{ bh.name }}</p>
@@ -71,7 +72,7 @@ export default defineComponent({
     },
     components: { NavBar, FooterBar, SideBar, MapPinIcon },
     methods: {
-        changePage(ubid: string, name: string, latitude: number, longitude: number){
+        changePage(ubid: string, name: string, latitude: number, longitude: number) {
             this.overviewStore.ubid = ubid
             this.overviewStore.name = name
             this.overviewStore.latitude = latitude
