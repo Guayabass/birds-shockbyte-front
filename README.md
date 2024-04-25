@@ -77,4 +77,6 @@ Birdhouses' names must be between 4 and 16 characters long.
 
 There's a cronjob that runs every 10 minutes (can be changed to any amount of time) that checks for birdhouses that haven't been modified in 1 year or more and automatically deletes them.
 
+When the graph is loaded, it will retrieve the 7 latest changes for the birdhouse along with the day they were made on.
+
 Here's a small video that shows the whole project: https://screenrec.com/share/HPyfNVvumR
