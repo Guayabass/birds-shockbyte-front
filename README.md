@@ -1,6 +1,6 @@
 # Vue 3 (TYPESCRIPT) + Vite + NestJS
 
-The entire application was done using the designs in https://www.figma.com/file/HzHDAngD6aOHxUmxxeNQzF/coding-test?node-id=0%3A1, they were followed closely however it may not be 100% accurate.
+The entire application was done using the designs in https://www.figma.com/file/HzHDAngD6aOHxUmxxeNQzF/coding-test?node-id=0%3A1 while using tailwindcss (for the majority), they were followed closely however it may not be 100% accurate.
 
 The backend app was made with NESTJS and can be checked here: https://github.com/Guayabass/birds-shockbyte-back
 
